@@ -1,0 +1,10 @@
+{
+  "devDependencies": {
+    "autoprefixer": "^10.4.19",
+    "postcss": "^8.4.38",
+    "tailwindcss": "^3.4.3"
+  },
+  "scripts": {
+    "tw": "npx tailwindcss -i ./static/src/input.css -o ./doofer/static/src/styles.css --watch"
+  }
+}

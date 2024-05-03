@@ -1,0 +1,36 @@
+{% load django_browser_reload %}
+{% load static %}
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="GitHub Codespaces ♥️ Django">
+    <meta name="author" content="GitHub Codespaces">
+    <meta name="generator" content="GitHub Codespaces">
+    <meta name="theme-color" content="#000000">
+    <link href="{% static 'src/styles.css' %}" rel="stylesheet">
+    <script src="https://unpkg.com/hyperscript.org@0.9.12" defer></script>
+    <title>{% block title %}{{ title }} | GitHub Codespaces ♥️ Django{% endblock %}</title>
+    
+</head>
+
+<body class="bg-gradient-to-r from-indigo-500">
+    <div class="flex flex-row min-h-screen justify-center items-center">
+        <header class="text-center">
+            <div class="flex justify-center items-center pt-12"> 
+                <img src="{% static 'Octocat.png' %}" class="h-24" alt="logo" />
+            </div>
+            <p class="text-xl">
+                GitHub Codespaces <span class="text-red-500">♥️</span> Django
+            </p>
+            <p class="text-sm">
+                Edit <code>doofer/templates/base.html</code> and see changes live!
+            </p>
+        </header>
+    </div>
+</body>
+
+</html>
