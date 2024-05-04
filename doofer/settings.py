@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django_browser_reload",
+    "doofer",
 ]
 
 MIDDLEWARE = [
@@ -128,6 +129,8 @@ USE_TZ = True
 STATICFILES_DIRS = [
     BASE_DIR / "doofer" / "static",
 ]
+
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
 
 STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "doofer" / "staticfiles"
