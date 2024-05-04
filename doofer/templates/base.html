@@ -18,20 +18,8 @@
     
 </head>
 
-<body class="bg-gradient-to-r from-indigo-500">
-    <div class="flex flex-row min-h-screen justify-center items-center">
-        <header class="text-center">
-            <div class="flex justify-center items-center pt-12"> 
-                <img src="{% static 'Octocat.png' %}" class="h-24" alt="logo" />
-            </div>
-            <p class="text-xl">
-                GitHub Codespaces <span class="text-red-500">♥️</span> Django
-            </p>
-            <p class="text-sm">
-                Edit <code>doofer/templates/base.html</code> and see changes live!
-            </p>
-        </header>
-    </div>
+<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' class="bg-gradient-to-r from-indigo-500">
+    {% block content %}{% endblock %}
 </body>
 
 </html>

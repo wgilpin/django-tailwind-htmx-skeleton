@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+    <div class="flex flex-row min-h-screen justify-center items-center">
+        <header class="text-center">
+            <div class="flex justify-center items-center pt-12"> 
+                <img src="{% static 'Octocat.png' %}" class="h-24" alt="logo" />
+            </div>
+            <p class="text-xl">
+                GitHub Codespaces <span class="text-red-500">♥️</span> Django 
+            </p><p class="text-xl">
+                TailwindCSS <span class="text-red-500">♥️</span> htmx
+            </p>
+            <p class="text-sm">
+                Edit <code>doofer/templates/base.html</code> and see changes live!
+            </p>
+            <div id="btn" class="mt-10" >
+                <button hx-post="/" hx-swap="outerHTML" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                    htmx test
+                </button>
+            </div>
+        </header>
+        
+    </div>
+{% endblock %}
