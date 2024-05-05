@@ -2,10 +2,12 @@
 module.exports = {
   content: [
     './doofer/templates/**/*.html',
-    // Add paths to other apps if necessary
+    './node_modules/flowbite/**/*.js'
   ],
   theme: {
     extend: {},
   },
-  plugins: [],
+  plugins: [
+    require('flowbite/plugin')
+  ],
 };

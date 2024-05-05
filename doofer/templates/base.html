@@ -1,25 +1,24 @@
-{% load django_browser_reload %}
-{% load static %}
+{% load django_browser_reload %} {% load static %}
 
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="GitHub Codespaces ♥️ Django">
-    <meta name="author" content="GitHub Codespaces">
-    <meta name="generator" content="GitHub Codespaces">
-    <meta name="theme-color" content="#000000">
-    <link href="{% static 'src/styles.css' %}" rel="stylesheet">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="GitHub Codespaces ♥️ Django" />
+    <meta name="author" content="GitHub Codespaces" />
+    <meta name="generator" content="GitHub Codespaces" />
+    <meta name="theme-color" content="#000000" />
+    <link href="{% static 'src/styles.css' %}" rel="stylesheet" />
     <script src="https://unpkg.com/hyperscript.org@0.9.12" defer></script>
     <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
     <title>{% block title %}{{ title }} | GitHub Codespaces ♥️ Django{% endblock %}</title>
-    
-</head>
+  </head>
 
-<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' class="bg-gradient-to-r from-indigo-500">
-    {% block content %}{% endblock %}
-</body>
-
+  <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' class="bg-gradient-to-r from-amber-600 to-amber-100">
+    {% include "navbar.html" %}<!-- -->
+    {% block content %}<!-- -->
+    {% endblock %}<!-- -->
+  </body>
 </html>
