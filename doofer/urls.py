@@ -24,6 +24,8 @@ from doofer.doofer import views as core_views
 
 urlpatterns = [
     path("", core_views.index),
+    path("login/", core_views.login_user, name="login"),
+    path("logout/", core_views.logout_user, name="logout"),
     path("admin/", admin.site.urls),
     path("__reload__/", include("django_browser_reload.urls")),
 ]
