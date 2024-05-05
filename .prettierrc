@@ -1,0 +1,10 @@
+{
+    "printWidth": 120,
+    "bracketSameLine": true,
+    "overrides": [
+      {
+        "files": "*.html",
+        "options": { "parser": "html" }
+      }
+    ]
+  }
