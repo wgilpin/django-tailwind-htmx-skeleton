@@ -1,7 +1,7 @@
 {% load widget_tweaks %}
 
 
-<form class="max-w-sm mx-auto">
+<form class="max-w-sm mx-auto" method="post" action="/register/" >
     {% csrf_token %}
     <div class="mb-5">
       {% render_field form.username|add_label_class:"block mb-2 text-sm font-medium text-gray-900 dark:text-white" %}
