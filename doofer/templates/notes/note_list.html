@@ -4,23 +4,25 @@
 
 
 {% block content %}
-    {% if notes %}
-    <div class="flex flex-wrap">
-        {% for note in notes %}
-            <div class="w-100 md:w-1/2 lg:w-1/3 xl:w-1/4 p-2">
-                <div class="bg-white rounded-lg shadow-md">
-                    <div class="p-4">
-                        <h5 class="text-lg font-bold">{{ note.title }}</h5>
-                        <p class="mt-2">{{ note.content }}</p>
+    <div id="notes-list">
+        {% if notes %}
+        <div class="flex flex-wrap">
+            {% for note in notes %}
+                <div class="w-100 md:w-1/2 lg:w-1/3 xl:w-1/4 p-2">
+                    <div class="bg-white rounded-lg shadow-md">
+                        <div class="p-4">
+                            <h5 class="text-lg font-bold">{{ note.title }}</h5>
+                            <p class="mt-2">{{ note.content }}</p>
+                        </div>
                     </div>
                 </div>
-            </div>
-        {% endfor %}
-    </div>
-    {% else %}
-        <div class="flex flex-row text-xl">
-            <p class="text-center mx-auto">No notes found</p>
+            {% endfor %}
         </div>
-    {% endif %}
+        {% else %}
+            <div class="flex flex-row text-xl">
+                <p class="text-center mx-auto">No notes found</p>
+            </div>
+        {% endif %}
+    </div>
 
 {% endblock %}
