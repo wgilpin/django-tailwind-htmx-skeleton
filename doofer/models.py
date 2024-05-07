@@ -16,6 +16,7 @@ class User(AbstractUser):
         related_name='users',
     )
     
+
 class Note(models.Model):
     title = models.CharField(max_length=255)
     comment = models.TextField()
@@ -26,4 +27,5 @@ class Note(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     related_updated_at = models.DateTimeField(auto_now=True)
     related = models.ManyToManyField('self', symmetrical=True)
-    # user = models.ForeignKey(User, on_delete=models.CASCADE)
+    # the author - this should be a foreignKey to the User model but it caused errors
+    user = models.IntegerField(default=0)

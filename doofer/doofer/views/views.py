@@ -9,6 +9,7 @@ def index(request):
     }
     if request.method == "POST":
         return render(request, "partial.html", context)
-    notes = Note.objects.all()
+    # set notes to all notes belonging to the current user
+    notes = Note.objects.filter(user=request.user.pk)
     context["notes"] = notes
     return render(request, "notes/note_list.html", context)

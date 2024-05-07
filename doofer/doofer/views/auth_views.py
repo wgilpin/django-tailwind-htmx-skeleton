@@ -124,7 +124,9 @@ def handle_uploaded_file(request):
                 # ignore "null" or '' values
                 created = datetime.strptime(column[BACKUP_CREATED], '%Y-%m-%d  %H:%M:%S.%f')
                 note.created_at = created
-            # note.user = request.user
+
+            user_id = request.user.pk
+            note.user = user_id
             note.save()
             print(f'Note {note.title} imported')
             success_count += 1
