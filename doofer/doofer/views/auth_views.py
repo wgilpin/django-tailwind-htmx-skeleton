@@ -3,6 +3,7 @@ from datetime import datetime
 import io
 from django import forms
 from django.shortcuts import render, redirect
+from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 
 from doofer.models import Note, User
@@ -45,8 +46,11 @@ def login_user(request):
             login(request, user)
             print("User logged in")
             return redirect("/")
-    print("User not logged in")
+        print("User not logged in")
+        messages.error(request, "Invalid username or password")
     return render(request, "auth/login.html", context)
+
+
 
 def register_user(request):
     form = LoginForm()
@@ -57,7 +61,7 @@ def register_user(request):
         password2 = request.POST.get("password2")
         # does the user already exists?
         if User.objects.filter(username=username).exists():
-            context["error"] = "User already exists"
+            messages.error(request, "User already exists")
             print("User already exists")
             return render(request, "auth/register.html", context)   
         # create the user
@@ -69,8 +73,8 @@ def register_user(request):
             return redirect("/")
         else:
             print("Passwords do not match")
-            context["error"] = "Passwords do not match"
-    print("User not created")
+            messages.error(request, "Passwords do not match")
+        print("User not created")
     return render(request, "auth/register.html", context)
 
 def logout_user(request):
