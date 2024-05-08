@@ -29,9 +29,15 @@ urlpatterns = [
     path("logout/", auth_views.logout_user, name="logout"),
     path("register/", auth_views.register_user, name="logout"),
     path("profile/", auth_views.profile, name="profile"),
+    path("note/<int:id>/", core_views.note_details, name="note_details"),
     path("admin/", admin.site.urls),
     path("__reload__/", include("django_browser_reload.urls")),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

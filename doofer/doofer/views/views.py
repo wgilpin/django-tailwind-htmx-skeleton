@@ -13,3 +13,11 @@ def index(request):
     notes = Note.objects.filter(user=request.user.pk)
     context["notes"] = notes
     return render(request, "notes/note_list.html", context)
+
+def note_details(request, id):
+    note = Note.objects.get(pk=id)
+    context = {
+        "title": note.title,
+        "note": note,
+    }
+    return render(request, "notes/note_details.html", context)
