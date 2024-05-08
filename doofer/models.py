@@ -1,20 +1,5 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-
-class User(AbstractUser):
-    # Add your custom fields here
-    # For example:
-    display_name = models.CharField(max_length=100)
-
-    groups = models.ManyToManyField(
-        'auth.Group',
-        related_name='users',
-    )
-
-    user_permissions = models.ManyToManyField(
-        'auth.Permission',
-        related_name='users',
-    )
     
 
 class Note(models.Model):

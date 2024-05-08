@@ -6,7 +6,9 @@
     "tailwindcss": "^3.4.3"
   },
   "scripts": {
-    "tw": "npx tailwindcss -i ./static/src/input.css -o ./doofer/static/src/styles.css --watch"
+    "tw": "npx tailwindcss -i ./static/src/input.css -o ./doofer/static/src/styles.css --watch",
+    "mm": "python manage.py makemigrations",
+    "mig": "python manage.py migrate"
   },
   "dependencies": {
     "flowbite": "^2.3.0"

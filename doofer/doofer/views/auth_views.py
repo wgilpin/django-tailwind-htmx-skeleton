@@ -5,8 +5,9 @@ from django import forms
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
 
-from doofer.models import Note, User
+from doofer.models import Note
 
 # column IDs for backup CSV upload
 BACKUP_ID = 0	
@@ -60,6 +61,7 @@ def register_user(request):
         password = request.POST.get("password")
         password2 = request.POST.get("password2")
         # does the user already exists?
+        
         if User.objects.filter(username=username).exists():
             messages.error(request, "User already exists")
             print("User already exists")
