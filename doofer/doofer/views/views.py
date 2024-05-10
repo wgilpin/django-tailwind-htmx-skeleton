@@ -1,5 +1,5 @@
 from django.forms import ModelForm
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 
 from doofer.models import Note
 
@@ -31,8 +31,7 @@ class NoteForm(ModelForm):
 
 def note_edit(request, id):
     note = Note.objects.get(pk=id)
-    form = NoteForm(instance=note)
-    context = {"form": form}
+    
     if request.method == "POST":
         title = request.POST.get("title")
         comment = request.POST.get("comment")
@@ -45,6 +44,8 @@ def note_edit(request, id):
         # convert html to markdown
         note.full_clean()
         note.save()
-        return redirect("note_details", id=id)
-
+        return render(request, "notes/note_details.html", {'note': note}
+                      )
+    form = NoteForm(instance=note)
+    context = {"form": form}
     return render(request, "notes/note_edit.html", context)
