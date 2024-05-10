@@ -6,8 +6,9 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
-
 from doofer.models import Note
+from markdownify import markdownify
+
 
 # column IDs for backup CSV upload
 BACKUP_ID = 0	
@@ -122,8 +123,16 @@ def handle_uploaded_file(request):
         try:
             note: Note = Note()
             note.title = column[BACKUP_TITLE]
-            note.comment = column[BACKUP_COMMENT]
-            note.snippet = column[BACKUP_SNIPPET]
+
+            # html comments convert into markdown
+            comment = column[BACKUP_COMMENT]
+            if column[BACKUP_SNIPPET]:
+                comment += "From page:"
+                comment += "<br/>"
+                comment += column[BACKUP_SNIPPET]
+            comment = markdownify(comment)
+            note.comment = comment
+
             note.url = column[BACKUP_URL]
             # convert string of format '16/06/2023  18:14:17' to datetime
             if len(column[BACKUP_CREATED]) > 5:

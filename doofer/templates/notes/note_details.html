@@ -6,9 +6,6 @@
   <!-- Modal body -->
   <div class="p-6 space-y-6">
     {% if note.comment %}
-      <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">{{ note.comment }}</p>
-    {% endif %}
-    {% if note.snippet %}
       <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">{{ note.as_html | safe }}</p>
     {% endif %}
     {% if note.url %}
@@ -18,7 +15,6 @@
   <!-- Modal footer -->
   <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
     <button
-      _="on click toggle .hidden on #note-modal"
       hx-get="/note/{{note.id}}/edit"
       hx-target="#note-details"
       type="button"

@@ -26,7 +26,7 @@ def note_details(request, id):
 class NoteForm(ModelForm):
     class Meta:
         model = Note
-        fields = ["title", "comment", "snippet", "url"]
+        fields = ["title", "comment", "url"]
 
 
 def note_edit(request, id):
@@ -35,11 +35,9 @@ def note_edit(request, id):
     if request.method == "POST":
         title = request.POST.get("title")
         comment = request.POST.get("comment")
-        snippet = request.POST.get("snippet")
         url = request.POST.get("url")
         note.title = title
         note.comment = comment
-        note.snippet = snippet
         note.url = url
         # convert html to markdown
         note.full_clean()
