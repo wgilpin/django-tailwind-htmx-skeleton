@@ -1,4 +1,4 @@
-<nav class="bg-amber border-gray-200 dark:bg-gray-900">
+<nav class="bg-amber-300 border-amber-500 border-b border-1 dark:bg-gray-900">
   <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
     <a href="/" class="flex items-center space-x-3 rtl:space-x-reverse">
       <img src="https://flowbite.com/docs/images/logo.svg" class="h-8" alt="Flowbite Logo" />
@@ -23,21 +23,14 @@
     <div class="hidden w-full md:block md:w-auto" id="navbar-default">
       <ul
         class="font-medium flex flex-col p-4 md:p-1 mt-4 border border-gray-100 rounded-lg bg-amber-400-50 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 md:bg-amber-500 dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
-        <li>
-          <a
-            href="/"
-            class="block py-2 px-3 bg-amber-700 rounded md:bg-transparent md:text-amber-900 md:p-0 dark:text-white md:dark:text-amber-500"
-            aria-current="page"
-            >Home</a
-          >
-        </li>
+        
         {% if not user.is_authenticated %}
         <li>
           <a
             href="#"
             hx-get="/login/"
             hx-target="#notes-list"
-            class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-amber-50 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+            class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-amber-50 md:p-2 dark:text-white md:dark:hover:text-amber-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
             >Login</a
           >
         </li>
@@ -46,7 +39,7 @@
             href="#"
             hx-get="/register/"
             hx-target="#notes-list"
-            class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+            class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-amber-700 md:p-2 dark:text-white md:dark:hover:text-amber-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
             >Register</a
           >
         </li>
@@ -54,8 +47,12 @@
         <li>
           <a
             href="/profile/"
-            class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-            >{{ user.username | capfirst }}</a
+            class="block py-2 px-3  hover:bg-amber-600 "
+            >
+            <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+              <path fill-rule="evenodd" d="M12 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm-2 9a4 4 0 0 0-4 4v1a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-1a4 4 0 0 0-4-4h-4Z" clip-rule="evenodd"/>
+            </svg>
+            </a
           >
         </li>
         {% endif %}
