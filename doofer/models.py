@@ -11,7 +11,6 @@ class Note(models.Model):
     comment = models.TextField(blank=True)
     snippet = models.TextField(blank=True)
     url = models.URLField(blank=True)
-    content = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     related_updated_at = models.DateTimeField(auto_now=True)
