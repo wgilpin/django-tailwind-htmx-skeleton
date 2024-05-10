@@ -1,0 +1,38 @@
+{% load widget_tweaks %}
+
+
+<form class="max-w-sm mx-auto pt-4" method="post" action="/note/{{form.instance.id}}/edit" >
+    {% csrf_token %}
+    <div class="mb-5">
+      {% render_field form.title|add_label_class:"block mb-2 text-sm font-medium text-gray-900 dark:text-white" %}
+      {% render_field form.title class="placeholder:italic bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-amber-500 focus:border-amber-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-amber-500 dark:focus:border-amber-500" placeholder="title" %}
+    </div>
+    <div class="mb-5">
+      {% render_field form.comment|add_label_class:"block mb-2 text-sm font-medium text-gray-900 dark:text-white" %}
+      {% render_field form.comment class="placeholder:italic bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-amber-500 focus:border-amber-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-amber-500 dark:focus:border-amber-500" placeholder="comment" %}
+    </div>
+    <div class="mb-5">
+      {% render_field form.snippet|add_label_class:"block mb-2 text-sm font-medium text-gray-900 dark:text-white" %}
+      {% render_field form.snippet class="placeholder:italic bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-amber-500 focus:border-amber-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-amber-500 dark:focus:border-amber-500" placeholder="HTML snippet" %}
+    </div>
+    <div class="mb-5">
+      {% render_field form.url|add_label_class:"block mb-2 text-sm font-medium text-gray-900 dark:text-white" %}
+      {% render_field form.url class="placeholder:italic bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-amber-500 focus:border-amber-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-amber-500 dark:focus:border-amber-500" placeholder="URL" %}
+    </div>
+    <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
+      <button type="submit" class="text-white bg-amber-700 hover:bg-amber-800 focus:ring-4 focus:outline-none focus:ring-amber-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-amber-600 dark:hover:bg-amber-700 dark:focus:ring-amber-800">
+        Save
+      </button>
+      <button
+        data-modal-hide="note-modal"
+        type="button"
+        class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-amber-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">
+        Cancel
+      </button>
+    </div>
+    
+  </form>
+  <!-- Modal footer -->
+  
+  
+  {% include "partials/messages.html" %}
