@@ -12,7 +12,6 @@ class Note(models.Model):
 
     title = models.CharField(blank=True, max_length=255)
     comment = models.TextField(blank=True)
-    snippet = models.TextField(blank=True)
     url = models.URLField(blank=True, max_length=URL_MAX_LENGTH)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -27,14 +26,18 @@ class Note(models.Model):
         if self.url and len(self.url) > self.URL_MAX_LENGTH:
             self.url = self.url[:self.URL_MAX_LENGTH]
 
-        # need at least one of title, comment, snippet, url
-        if not any([self.title, self.comment, self.snippet, self.url]):
-            raise ValidationError('Need at least one of title, comment, snippet, url')
+        # need at least one of title, comment, url
+        if not any([self.title, self.comment, self.url]):
+            raise ValidationError('Need at least one of title, comment, url')
         
-        # convert html snippet to markdown
-        if self.snippet:
-            self.snippet = markdownify(self.snippet)
+        # convert any html to markdown
+        if self.comment:
+            self.comment = markdownify(self.comment)
 
     # convert markdown to html for display
     def as_html(self):
-        return markdown(self.snippet)
+        return markdown(self.comment)
+    
+    # convert to string
+    def __str__(self):
+        return self.title
