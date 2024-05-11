@@ -1,11 +1,12 @@
+from urllib.parse import parse_qs, urlparse
+
 from django.db import models
 from django.forms import ValidationError
-from urllib.parse import urlparse, parse_qs
 from markdownify import markdownify  # html -> markdown
-    
 
 
 class Note(models.Model):
+    """ Django model for a note object """
     URL_MAX_LENGTH = 2000
 
     title = models.CharField(blank=True, max_length=255)
