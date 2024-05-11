@@ -18,6 +18,26 @@ class Note(models.Model):
     related = models.ManyToManyField('self', symmetrical=True)
     # the author - this should be a foreignKey to the User model but it caused errors
     user = models.IntegerField(default=0)
+    # the embeddings vector, to be replaced with pgvector later
+    title_embedding = models.TextField(blank=True)
+    content_embedding = models.TextField(blank=True)
+
+    def get_title_embeddings(self) -> list[float]:
+        """ get the title embeddings as a list of floats """
+        return [float(e) for e in self.title_embedding.split(',') if e]
+
+    def set_title_embeddings(self, embeddings: list[float]) -> None:
+        """ set the title embeddings as a list of floats """
+        self.title_embedding = ','.join([str(e) for e in embeddings])
+        
+    def set_content_embeddings(self, embeddings: list[float]) -> None:
+        """ set the content embeddings as a list of floats """
+        self.content_embedding = ','.join([str(e) for e in embeddings])
+        
+    def get_content_embeddings(self) -> list[float]:
+        """ get the content embeddings as a list of floats """
+        return [float(e) for e in self.content_embedding.split(',') if e]
+
 
     # validate model and convert html to markdown
     def clean(self) -> None:
