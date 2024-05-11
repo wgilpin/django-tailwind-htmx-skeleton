@@ -2,25 +2,26 @@ from urllib.parse import parse_qs, urlparse
 
 from django.db import models
 from django.forms import ValidationError
-from markdownify import markdownify  # html -> markdown
+from markdownify import markdownify  # type: ignore[import-untyped]
 
 
 class Note(models.Model):
     """ Django model for a note object """
     URL_MAX_LENGTH = 2000
 
-    title = models.CharField(blank=True, max_length=255)
-    comment = models.TextField(blank=True)
-    url = models.URLField(blank=True, max_length=URL_MAX_LENGTH)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    related_updated_at = models.DateTimeField(auto_now=True)
-    related = models.ManyToManyField('self', symmetrical=True)
+    id: models.AutoField = models.AutoField(primary_key=True)
+    title: models.CharField = models.CharField(blank=True, max_length=255)
+    comment: models.TextField = models.TextField(blank=True)
+    url: models.URLField = models.URLField(blank=True, max_length=URL_MAX_LENGTH)
+    created_at: models.DateTimeField = models.DateTimeField(auto_now_add=True)
+    updated_at: models.DateTimeField = models.DateTimeField(auto_now=True)
+    related_updated_at: models.DateTimeField = models.DateTimeField(auto_now=True)
+    related: models.ManyToManyField = models.ManyToManyField('self', symmetrical=True)
     # the author - this should be a foreignKey to the User model but it caused errors
-    user = models.IntegerField(default=0)
+    user: models.IntegerField = models.IntegerField(default=0)
     # the embeddings vector, to be replaced with pgvector later
-    title_embedding = models.TextField(blank=True)
-    content_embedding = models.TextField(blank=True)
+    title_embedding: models.TextField = models.TextField(blank=True)
+    content_embedding: models.TextField = models.TextField(blank=True)
 
     def get_title_embeddings(self) -> list[float]:
         """ get the title embeddings as a list of floats """
