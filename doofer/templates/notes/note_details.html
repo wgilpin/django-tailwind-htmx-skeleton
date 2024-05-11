@@ -6,14 +6,23 @@
   <!-- Modal body -->
   <div class="p-6 space-y-6">
     {% if note.comment %}
-      <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">{{ note.as_html | safe }}</p>
+      <p 
+        class="list-disc text-base leading-relaxed text-gray-500 dark:text-gray-400"
+        _="init add .markdown-bullets to <ul/>"
+        >
+
+        {{ note.as_html | safe }}
+        <button
+        _="on click add .markdown-bullets to <ul/>"
+        >test</button>
+      </p>
     {% endif %}
   </div>
   <!-- Modal footer -->
   <div class="flex items-center justify-end p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
 
     {% comment %} note details button {% endcomment %}
-    <a href="{{ note.url }}" target=”_blank” class="text-base leading-relaxed text-white bg-amber-500 hover:bg-amber-800 focus:ring-4 focus:outline-none focus:ring-amber-300 font-medium rounded-lg  px-5 py-2.5 text-center dark:bg-amber-600 dark:hover:bg-amber-700 dark:focus:ring-amber-800">
+    <a href="{{ note.url }}" target=”_blank” class="text-base leading-relaxed bg-amber-500 hover:bg-amber-800 focus:ring-4 focus:outline-none focus:ring-amber-300 rounded-lg  px-5 py-2.5 text-center dark:bg-amber-600 dark:hover:bg-amber-700 dark:focus:ring-amber-800">
       <svg class="w-6 h-6 text-blue-600 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
         <path fill-rule="evenodd" d="M4.998 7.78C6.729 6.345 9.198 5 12 5c2.802 0 5.27 1.345 7.002 2.78a12.713 12.713 0 0 1 2.096 2.183c.253.344.465.682.618.997.14.286.284.658.284 1.04s-.145.754-.284 1.04a6.6 6.6 0 0 1-.618.997 12.712 12.712 0 0 1-2.096 2.183C17.271 17.655 14.802 19 12 19c-2.802 0-5.27-1.345-7.002-2.78a12.712 12.712 0 0 1-2.096-2.183 6.6 6.6 0 0 1-.618-.997C2.144 12.754 2 12.382 2 12s.145-.754.284-1.04c.153-.315.365-.653.618-.997A12.714 12.714 0 0 1 4.998 7.78ZM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" clip-rule="evenodd"/>
       </svg>
