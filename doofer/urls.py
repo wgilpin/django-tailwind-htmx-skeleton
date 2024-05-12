@@ -31,6 +31,7 @@ urlpatterns = [
     path("profile/", auth_views.profile, name="profile"),
     path("note/<int:id>/edit", core_views.note_edit, name="note_edit"),
     path("note/<int:id>/", core_views.note_details, name="note_details"),
+    path("search/", core_views.search, name="search"),
     path("admin/", admin.site.urls),
     path("__reload__/", include("django_browser_reload.urls")),
 ]
