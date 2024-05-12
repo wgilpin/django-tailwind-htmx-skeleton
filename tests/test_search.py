@@ -3,7 +3,6 @@ import pytest
 from doofer.embeddings import getTextEmbedding
 from doofer.models import Note
 from doofer.search import (
-    noteSummariesToIds,
     getMyNotes,
     getSimilarToText,
     get_note_by_id,
@@ -13,17 +12,6 @@ from doofer.search import (
     getEmbeddingsForNotes,
 )
 from fixtures import user_1, note_1, note_2, note_3
-
-
-@pytest.mark.django_db
-def test_noteSummariesToIds():
-    summaries = [["1", "Title 1"], ["2", "Title 2"], ["3", "Title 3"]]
-    expected = [
-        {"id": "1", "title": "Title 1"},
-        {"id": "2", "title": "Title 2"},
-        {"id": "3", "title": "Title 3"},
-    ]
-    assert noteSummariesToIds(summaries) == expected
 
 
 @pytest.mark.django_db
