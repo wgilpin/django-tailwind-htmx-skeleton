@@ -6,38 +6,15 @@ import requests
 
 from typing import TypeAlias
 from typing import Dict, List
+from dotenv import load_dotenv
+from sentence_transformers import SentenceTransformer
 
 from doofer.models import Note
 
+HF_MODEL = 'all-MiniLM-L6-v2'
+EMBEDDINGS_SIZE = 384
 
-HF_SECRET_NAME = 'HF_API_KEY/versions/1'
-
-def fetch(url: str, options: dict = {}) -> requests.Response:
-  """
-  A polyfill for the fetch() function in JavaScript.
-
-  Args:
-    url (str): The URL to fetch.
-    options (dict): The options to pass to the request.
-
-  Returns:
-    requests.Response: The response from the request.
-  """
-
-  # Set default options
-  default_options = {
-    "method": "GET",
-    "headers": {},
-    "body": None,
-  }
-  options = {**default_options, **options}
-
-  # Make the request
-  response = requests.request(**options)
-
-  # Return the response
-  return response
-
+model = None
 
 """
  * get the embedding from hugging face
@@ -45,35 +22,20 @@ def fetch(url: str, options: dict = {}) -> requests.Response:
  * @return {Promise<number[]>} the embedding
 """
 def getHFembeddings(text: str) -> list[float]:
-  model = 'all-MiniLM-L6-v2'
-  apiUrl = f'https:#api-inference.huggingface.co/pipeline/feature-extraction/sentence-transformers/${model}'
-  data = {"inputs": text, "wait_for_model": True}
+  global model
   
-  hfToken = os.getenv(HF_SECRET_NAME) or ""
-  if not hfToken:
-    raise Exception('HF_API_KEY not found in environment')
+  load_dotenv()
+  token = os.getenv('API_TOKEN')
   
-  retries = 4
-  while retries > 0:
-    try:
-      # call the api
-      response = fetch(apiUrl, {"headers": {"Authorization": f'Bearer ${hfToken}',"pragma": 'no-cache', 'cache-control': 'no-cache',
-        },
-        "method": 'POST',
-        "body": json.dumps(data),
-      })
-      res = response.json()
-      if res.error:
-        raise Exception(res.error)
-
-      return res
-    except Exception as error:
-      print('hf error', {error})
-      retries -= 1
-      # wait 7 seconds before retrying  
-      time.sleep(7)
-      continue
-  return []
+  try:
+    if not model:
+      model = SentenceTransformer(f'sentence-transformers/{HF_MODEL}', token=token)
+      
+    embeddings = model.encode(text)
+    return list(embeddings)
+  except Exception as error:
+    print('hf error', error)
+    return []
 
 """
    * get the embedding from openai
@@ -97,10 +59,10 @@ def updateNoteEmbeddings(note: Note) -> Note:
     # get the note embeddings from the db or calculate them if needed
     dirty = False
     if note.title and not note.title_embedding:
-        note.title_embedding = getTextEmbedding(note.title)
+        note.set_title_embeddings(getTextEmbedding(note.title))
         dirty = True
     if note.comment and not note.content_embedding:
-        note.content_embedding = getTextEmbedding(note.comment)
+        note.set_content_embeddings(getTextEmbedding(note.comment))
         dirty = True
 
     if dirty:
@@ -137,7 +99,9 @@ def cosine_similarity(vector1, vector2):
 """
 def getNoteSimilarity(note1: Note, note2: Note) ->float:
   maxSimilarity = 0.0
-    
+  # no we need to update embeddings
+  updateNoteEmbeddings(note1)
+  updateNoteEmbeddings(note2)
   # if there are embeddings and the search vector has embeddings
   if note1.title_embedding and note2.title_embedding:
       titleDistance: float = cosine_similarity(note1.get_title_embeddings(), note2.get_title_embeddings())
