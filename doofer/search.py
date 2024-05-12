@@ -65,8 +65,6 @@ def get_note_by_id(notes: list[Note], id: str) -> Note | None:
     return note
 
 
-
-
 """
  * get the 10 most similar notes to a search vector
  * @param {Array<number[]>} searchVecs array of the vectors to search for
