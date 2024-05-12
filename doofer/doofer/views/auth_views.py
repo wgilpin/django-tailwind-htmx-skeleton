@@ -7,15 +7,15 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from doofer.models import Note
-from markdownify import markdownify
+from markdownify import markdownify  # type: ignore[import-untyped]
 
 
 # column IDs for backup CSV upload
-BACKUP_ID = 0	
-BACKUP_TITLE = 1	
-BACKUP_COMMENT	= 2
-BACKUP_SNIPPET	= 3 
-BACKUP_URL	= 4 
+BACKUP_ID = 0
+BACKUP_TITLE = 1
+BACKUP_COMMENT = 2
+BACKUP_SNIPPET = 3
+BACKUP_URL = 4
 BACKUP_CREATED = 5
 
 
@@ -53,7 +53,6 @@ def login_user(request):
     return render(request, "auth/login.html", context)
 
 
-
 def register_user(request):
     form = LoginForm()
     context = {"form": form}
@@ -62,11 +61,11 @@ def register_user(request):
         password = request.POST.get("password")
         password2 = request.POST.get("password2")
         # does the user already exists?
-        
+
         if User.objects.filter(username=username).exists():
             messages.error(request, "User already exists")
             print("User already exists")
-            return render(request, "auth/register.html", context)   
+            return render(request, "auth/register.html", context)
         # create the user
         if password == password2:
             user = User.objects.create_user(username=username, password=password)
@@ -80,13 +79,16 @@ def register_user(request):
         print("User not created")
     return render(request, "auth/register.html", context)
 
+
 def logout_user(request):
     logout(request)
     print("User logged out")
     return redirect("/")
 
+
 class UploadFileForm(forms.Form):
     backup_file = forms.FileField()
+
 
 def profile(request):
     message = ""
@@ -101,13 +103,14 @@ def profile(request):
         form = UploadFileForm()
     return render(request, "auth/profile.html", {"form": form, "message": message})
 
+
 def handle_uploaded_file(request):
     # https://simathapa111.medium.com/how-to-upload-a-csv-file-in-django-3a0d6295f624
     f = request.FILES["backup_file"]
     # let's check if it is a csv file
-    if not f.name.endswith('.csv'):
-        return 'THIS IS NOT A CSV FILE'
-    data_set = f.read().decode('UTF-8')
+    if not f.name.endswith(".csv"):
+        return "THIS IS NOT A CSV FILE"
+    data_set = f.read().decode("UTF-8")
 
     # setup a stream which is when we loop through each line we are able to handle a data in a stream
     io_string = io.StringIO(data_set)
@@ -118,7 +121,7 @@ def handle_uploaded_file(request):
     lines_count = 0
     success_count = 0
     # loop through each line and create a note
-    for column in csv.reader(io_string, delimiter=',', quotechar='"'):
+    for column in csv.reader(io_string, delimiter=",", quotechar='"'):
         lines_count += 1
         try:
             note: Note = Note()
@@ -137,19 +140,20 @@ def handle_uploaded_file(request):
             # convert string of format '16/06/2023  18:14:17' to datetime
             if len(column[BACKUP_CREATED]) > 5:
                 # ignore "null" or '' values
-                created = datetime.strptime(column[BACKUP_CREATED], '%Y-%m-%d  %H:%M:%S.%f')
+                created = datetime.strptime(
+                    column[BACKUP_CREATED], "%Y-%m-%d  %H:%M:%S.%f"
+                )
                 note.created_at = created
 
             user_id = request.user.pk
             note.user = user_id
             note.save()
-            print(f'Note {note.title} imported')
+            print(f"Note {note.title} imported")
             success_count += 1
         except (ValueError, IndexError) as e:
             if len(column) < 6:
-                print('Error: missing columns')
+                print("Error: missing columns")
             else:
-                print(f'Error importing {column[BACKUP_TITLE]}')
-    print( f'Imported {success_count} out of {lines_count} items')
+                print(f"Error importing {column[BACKUP_TITLE]}")
+    print(f"Imported {success_count} out of {lines_count} items")
     return success_count, lines_count
-
