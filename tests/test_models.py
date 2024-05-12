@@ -1,18 +1,20 @@
 from doofer.models import Note
 
-def test_get_title_embeddings():
-    note = Note(title_embedding='0.1,0.2,0.3')
-    expected_embeddings = [0.1, 0.2, 0.3]
-    assert note.get_title_embeddings() == expected_embeddings
+from fixtures import user_1, note_1, note_2, note_3
 
-    note = Note(title_embedding='0.5,0.6,0.7,0.8')
-    expected_embeddings = [0.5, 0.6, 0.7, 0.8]
-    assert note.get_title_embeddings() == expected_embeddings
 
-    note = Note(title_embedding='')
-    expected_embeddings = []
-    assert note.get_title_embeddings() == expected_embeddings
+def test_get_title_embeddings(note_1, note_2, note_3):
+    note_2.set_title_embeddings([0.1, 0.1, 0.2, 0.3])
+    note_3.set_title_embeddings([0.1, 0.1, 0.2, 0.3])
 
-    note = Note(title_embedding='0.9')
-    expected_embeddings = [0.9]
-    assert note.get_title_embeddings() == expected_embeddings
+    note_1_embeddings = [0.1, 0.2, 0.3]
+    note_1.set_title_embeddings(note_1_embeddings)
+    assert note_1.get_title_embeddings() == note_1_embeddings
+
+    note_2_embeddings = []
+    note_2.set_title_embeddings(note_2_embeddings)
+    assert note_2.get_title_embeddings() == note_2_embeddings
+
+    note_3_embeddings = [0.9]
+    note_3.set_title_embeddings(note_3_embeddings)
+    assert note_3.get_title_embeddings() == note_3_embeddings
