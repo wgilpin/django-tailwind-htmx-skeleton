@@ -1,12 +1,18 @@
+""" Django view methods """
+
+# pylint: disable=no-member
+
 from django.forms import ModelForm
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 
 from doofer.models import Note
+from doofer.search import do_text_search
 
 
 def index(request):
+    """Home page view"""
     context = {
-        "title": "Django example",
+        "title": "Doofer",
     }
     if request.method == "POST":
         return render(request, "partial.html", context)
@@ -16,8 +22,9 @@ def index(request):
     return render(request, "notes/note_list.html", context)
 
 
-def note_details(request, id):
-    note = Note.objects.get(pk=id)
+def note_details(request, id_):
+    """Note details partial view"""
+    note = Note.objects.get(pk=id_)
     context = {
         "title": note.title,
         "note": note,
@@ -26,13 +33,18 @@ def note_details(request, id):
 
 
 class NoteForm(ModelForm):
+    """Form for editing a note"""
+
     class Meta:
+        """form fields"""
+
         model = Note
         fields = ["title", "comment", "url"]
 
 
-def note_edit(request, id):
-    note = Note.objects.get(pk=id)
+def note_edit(request, id_):
+    """Edit a note"""
+    note = Note.objects.get(pk=id_)
 
     if request.method == "POST":
         title = request.POST.get("title")
@@ -51,11 +63,20 @@ def note_edit(request, id):
 
 
 def search(request):
-    query = request.GET.get("query")
+    """endpoint for the search"""
+    if request.method != "POST":
+        raise ValueError("Invalid request method")
+    print("search endpoint")
+    query = request.POST.get("search")
+    if not query:
+        return redirect("index")
     # case insensitive search
-    notes = Note.objects.filter(title__icontains=query)
+    notes = do_text_search(query, uid=request.user.pk)
     context = {
         "title": "Search results",
         "notes": notes,
+        "search_term": query,
     }
-    return render(request, "notes/note_list.html", context)
+    payload = render(request, "notes/note_list.html", context)
+    print("rendered search results")
+    return payload
