@@ -8,9 +8,9 @@
     {% if note.comment %}
       <p 
         class="list-disc text-base leading-relaxed text-gray-500 dark:text-gray-400"
-        _="init add .markdown-bullets to <ul/>"
+        _="init add .markdown-bullets to <ul/> then add .markdown_link to <a/>"
         >
-        {{ note.as_html | safe }}
+        {{ note.content_as_html | safe }}
       </p>
     {% endif %}
   </div>

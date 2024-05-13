@@ -5,3 +5,13 @@
 .markdown-bullets {
   list-style-type: disc !important;
 }
+
+.markdown_link {
+  color: #1a0dab;
+  text-decoration: none;
+  font-weight:  500;
+}
+
+.markdown_link:hover {
+  text-decoration: underline;
+}

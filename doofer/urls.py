@@ -24,13 +24,13 @@ from doofer.doofer.views import views as core_views
 from doofer.doofer.views import auth_views
 
 urlpatterns = [
-    path("", core_views.index),
+    path("", core_views.index, name="index"),
     path("login/", auth_views.login_user, name="login"),
     path("logout/", auth_views.logout_user, name="logout"),
     path("register/", auth_views.register_user, name="logout"),
     path("profile/", auth_views.profile, name="profile"),
-    path("note/<int:id>/edit", core_views.note_edit, name="note_edit"),
-    path("note/<int:id>/", core_views.note_details, name="note_details"),
+    path("note/<int:id_>/edit", core_views.note_edit, name="note_edit"),
+    path("note/<int:id_>/", core_views.note_details, name="note_details"),
     path("search/", core_views.search, name="search"),
     path("admin/", admin.site.urls),
     path("__reload__/", include("django_browser_reload.urls")),
