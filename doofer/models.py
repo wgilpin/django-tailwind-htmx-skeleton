@@ -2,7 +2,7 @@ from urllib.parse import parse_qs, urlparse
 
 from django.db import models
 from django.forms import ValidationError
-from markdown import markdown
+from markdown import markdown  # type: ignore[import-untyped]
 from markdownify import markdownify  # type: ignore[import-untyped]
 
 
