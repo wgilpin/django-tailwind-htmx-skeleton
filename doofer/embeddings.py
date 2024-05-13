@@ -1,20 +1,11 @@
-import json
+""" Routines for processing embeddings """
+
 import math
-import os
-import time
-import requests
 
-from typing import TypeAlias
-from typing import Dict, List
-from dotenv import load_dotenv
-from sentence_transformers import SentenceTransformer
-
+from doofer.hf_model import HFModel
 from doofer.models import Note
 
-HF_MODEL = "all-MiniLM-L6-v2"
 EMBEDDINGS_SIZE = 384
-
-model = None
 
 """
  * get the embedding from hugging face
@@ -23,18 +14,11 @@ model = None
 """
 
 
-def getHFembeddings(text: str) -> list[float]:
-    global model
-
-    load_dotenv()
-    token = os.getenv("API_TOKEN")
+def get_hf_embeddings(text: str) -> list[float]:
+    """Get the embeddings for a given text using the Hugging Face model"""
 
     try:
-        if not model:
-            model = SentenceTransformer(
-                f"sentence-transformers/{HF_MODEL}", token=token
-            )
-
+        model = HFModel().load_model()
         embeddings = model.encode(text)
         return list(embeddings)
     except Exception as error:
@@ -42,51 +26,35 @@ def getHFembeddings(text: str) -> list[float]:
         return []
 
 
-"""
-   * get the embedding from openai
-   * @param {str} text the text to embed
-   * @param {boolean} useCache whether to use the cache
-   * @return {Promise<number[]>} the embedding
-   * @see https:#beta.openai.com/docs/api-reference/retrieve-embedding
-  """
-
-
-def getTextEmbedding(text: str) -> list[float]:
+def get_text_embedding(text: str) -> list[float]:
+    """Get the embeddings for a given text"""
     try:
-        vector: list[float] = getHFembeddings(text)
+        vector: list[float] = get_hf_embeddings(text)
         return vector
     except Exception as error:
         print("API  error", {error})
         return []
 
 
-def updateNoteEmbeddings(note: Note) -> Note:
-    # get the note embeddings from the db or calculate them if needed
+def update_note_embeddings(note: Note) -> Note:
+    """get the note embeddings from the db or calculate them if needed"""
     dirty = False
     if note.title and not note.title_embedding:
-        note.set_title_embeddings(getTextEmbedding(note.title))
+        note.set_title_embeddings(get_text_embedding(note.title))
         dirty = True
     if note.comment and not note.content_embedding:
-        note.set_content_embeddings(getTextEmbedding(note.comment))
+        note.set_content_embeddings(get_text_embedding(note.comment))
         dirty = True
 
     if dirty:
+        print("updating note", note)
         note.save()
 
     return note
 
 
 def cosine_similarity(vector1, vector2):
-    """
-    Calculate the cosine similarity between two vectors.
-
-    Args:
-      vector1 (list): The first vector.
-      vector2 (list): The second vector.
-
-    Returns:
-      float: The cosine similarity between the two vectors.
-    """
+    """Calculate the cosine similarity between two vectors"""
     if len(vector1) != len(vector2):
         return 0.0
 
@@ -100,25 +68,21 @@ def cosine_similarity(vector1, vector2):
         return dot_product / (magnitude1 * magnitude2)
 
 
-"""
-  * calculate the similarity between 2 notes
-"""
-
-
-def getNoteSimilarity(note1: Note, note2: Note) -> float:
-    maxSimilarity = 0.0
+def get_note_similarity(note1: Note, note2: Note) -> float:
+    """calculate the similarity between 2 notes"""
+    max_similarity = 0.0
     # no we need to update embeddings
-    updateNoteEmbeddings(note1)
-    updateNoteEmbeddings(note2)
+    update_note_embeddings(note1)
+    update_note_embeddings(note2)
     # if there are embeddings and the search vector has embeddings
     if note1.title_embedding and note2.title_embedding:
-        titleDistance: float = cosine_similarity(
+        title_distance: float = cosine_similarity(
             note1.get_title_embeddings(), note2.get_title_embeddings()
         )
     if note1.content_embedding and note2.content_embedding:
 
-        contentDistance: float = cosine_similarity(
+        content_distance: float = cosine_similarity(
             note1.get_content_embeddings(), note2.get_content_embeddings()
         )
-        maxSimilarity = max(maxSimilarity, titleDistance, contentDistance)
-    return maxSimilarity
+        max_similarity = max(max_similarity, title_distance, content_distance)
+    return max_similarity
