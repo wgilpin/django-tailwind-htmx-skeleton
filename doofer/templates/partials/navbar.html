@@ -5,14 +5,25 @@
       <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Doofer</span>
     </a>
     
-    <input
-      hx-post="/search/" 
-      hx-trigger="keyup[key=='Enter']"
-      id="search"
-      type="search"
-      class="block my-4 py-2 px-3 flex-1 text-gray-900 rounded hover:bg-gray-100  md:border-0  md:p-2 dark:text-white md:dark:hover:text-amber-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-      placeholder="Search..."
-      />
+    <form
+      class="flex-1  block"
+      action="/search/" 
+      method="post"
+      id="searchForm"
+    >
+      {% csrf_token %}
+      <input
+        id="search"
+        name="search"
+        type="search"
+        _="on search call #searchForm.submit()"
+        class="block my-4 py-2 px-3 flex-1 text-gray-900 rounded hover:bg-gray-100  md:border-0  md:p-2 dark:text-white md:dark:hover:text-amber-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+        placeholder="Search..."
+        {% if search_term %}
+        value="{{ search_term }}"
+        {% endif %}
+        />
+    </form>
     <button
       data-collapse-toggle="navbar-default"
       type="button"
