@@ -1,14 +1,15 @@
+""" Routines for searching notes """
+
+# pylint: disable=no-member
+
+from collections import defaultdict
 from dataclasses import dataclass
-from typing import TypeAlias
 from doofer.models import Note
 from doofer.embeddings import (
     cosine_similarity,
-    updateNoteEmbeddings,
-    getTextEmbedding,
+    update_note_embeddings,
+    get_text_embedding,
 )
-from typing import List
-from django.db.models import QuerySet
-from doofer.models import Note
 
 THRESHOLD = 0.25
 MAX_CACHE_SIZE = 20
@@ -16,40 +17,43 @@ MAX_CACHE_SIZE = 20
 
 @dataclass
 class NoteSummaryRecord:
+    """mapping a note id to a title"""
+
     id: str
     title: str
 
 
-def getMyNotes(uid: str) -> list[Note]:
+def get_my_notes(uid: str) -> list[Note]:
     """Get all notes for current user"""
     notes = list(Note.objects.filter(user=uid))
     return notes
 
 
-def getSimilarToText(text: str, notes: list[Note], count=10):
+def get_similar_to_text(text: str, notes: list[Note], count=10):
     """Get notes similar to a text query
     test -- the text to search for
     notes -- the notes to search
     count the max number of notes to return
     Returns the ids of most similar notes sorted by similarity
     """
-    textVector: list[float] = getTextEmbedding(text)
-    similarNoteIds: list[NoteSummaryRecord] = vecsSimilarRanked(
-        [textVector], notes, "", count
+    text_vector: list[float] = get_text_embedding(text)
+    similar_note_ids: list[NoteSummaryRecord] = vecs_similar_ranked(
+        [text_vector], notes, "", count
     )
-    return similarNoteIds
+    return similar_note_ids
 
 
-def get_note_by_id(notes: list[Note], id: str) -> Note | None:
+def get_note_by_id(notes: list[Note], note_id: str) -> Note | None:
     """Get a note by id from a list of notes"""
-    note = next((x for x in notes if str(x.id) == id), None)  # type: ignore[attr-defined]
+    str_id = str(note_id)
+    note = next((x for x in notes if str(x.id) == str_id), None)  # type: ignore[attr-defined]
     return note
 
 
-def vecsSimilarRanked(
+def vecs_similar_ranked(
     vecs: list[list[float]],
     notes: list[Note],
-    originalId: str,
+    original_id: str,
     count=10,
     threshold=THRESHOLD,
 ) -> list[NoteSummaryRecord]:
@@ -62,56 +66,57 @@ def vecsSimilarRanked(
     threshold --  the minimum similarity score to return
     Returns ids of most similar notes sorted by similarity
     """
-    similarityScores: dict[str, float] = {}
+    similarity_scores: dict[str, float] = defaultdict(float)
 
     # for a note with embs 'noteVec', calculate the similarity
     for note in notes:
+        update_note_embeddings(note)
         for vec in vecs:
             # for a given note and given embedding, calculate the similarity
             score = max(
-                cosine_similarity(vec, note.title_embedding),
-                cosine_similarity(vec, note.content_embedding),
+                cosine_similarity(vec, note.get_title_embeddings()),
+                cosine_similarity(vec, note.get_content_embeddings()),
             )
             if abs(score) < 0.0000001:
-                print(f"Similarity score : ${score} for ${note.id} v. ${originalId}")
+                print(f"Similarity score : {score} for {note.id} v. {original_id}")
 
             # keep the highest score
-            if score > threshold and score > similarityScores[note.id]:
-                similarityScores[note.id] = score
+            if score > threshold and score > similarity_scores[note.id]:
+                similarity_scores[note.id] = score
     # Sort score scores in descending order
     # -> list of [id, score]
-    sortedScores = sorted(similarityScores.items(), key=lambda x: x[1], reverse=True)
+    sorted_scores = sorted(similarity_scores.items(), key=lambda x: x[1], reverse=True)
 
     # Retrieve the top 'count' notes
     # -> list of ids
-    rankedNotes = [s[0] for s in sortedScores[:count]]
+    ranked_notes = [s[0] for s in sorted_scores[:count]]
 
     # prepare the return value
     related: list[NoteSummaryRecord] = []
-    for id in rankedNotes:
+    for note_id in ranked_notes:
         # get the title of the note with id 'id'
-        n = get_note_by_id(notes, id)
+        n = get_note_by_id(notes, str(note_id))
         if n:
-            related.append(NoteSummaryRecord(id, n.title))
+            related.append(NoteSummaryRecord(str(note_id), n.title))
     return related
 
 
-def notesSimilarRanked(
-    note: Note, notes: list[Note], originalId: str, count=10, threshold=THRESHOLD
+def notes_similar_ranked(
+    note: Note, notes: list[Note], original_id: str, count=10, threshold=THRESHOLD
 ) -> list[NoteSummaryRecord]:
     """utility fn to package the note embeddings for search"""
 
-    return vecsSimilarRanked(
-        [note.title_embedding, note.content_embedding],
+    return vecs_similar_ranked(
+        [note.get_title_embeddings(), note.get_content_embeddings()],
         notes,
-        originalId,
+        original_id,
         count,
         threshold,
     )
 
 
-def doTextSearch(
-    searchText: str, maxResults: float, uid: str
+def do_text_search(
+    search_text: str, uid: str, max_results: float = 10
 ) -> list[NoteSummaryRecord]:
     """
     * search for text in the notes
@@ -120,35 +125,37 @@ def doTextSearch(
     uid --  the user id
     Returns  the most similar notes sorted by similarity {id: title}
     """
-    notes = getMyNotes(uid)
+    notes = get_my_notes(uid)
     results: list[NoteSummaryRecord] = []
 
-    if len(notes) == 0:
+    if len(notes) == 0 or not search_text:
         print("textSearch - no notes", uid)
         return results
 
     # crude text search
-    searchTextLower = searchText.lower()
+    search_text_lower = search_text.lower()
     for note in notes:
-        if note.title.toLowerCase().includes(
-            searchTextLower
-        ) or note.comment.toLowerCase().includes(searchTextLower):
+        if (
+            search_text_lower in note.title.lower()
+            or search_text_lower in note.comment.lower()
+        ):
             results.append(NoteSummaryRecord(id=str(note.id), title=note.title))
 
     # if we still don't have enough results, search for similar notes
-    if len(results) < maxResults:
-        searchResults = getSimilarToText(searchText, notes, maxResults - len(results))
-        for r in searchResults:
+    if len(results) < max_results:
+        search_results = get_similar_to_text(
+            search_text, notes, max_results - len(results)
+        )
+        for result in search_results:
             # only add if the key not already in the list
-            temp = NoteSummaryRecord(id=r[0], title=r[1])
-            if not temp in results:
-                results.append(temp)
+            if not any(note.id == result.id for note in results):
+                results.append(result)
 
     return results
 
 
-def doNoteSearch(
-    noteId: str, maxResults: float, uid: str, threshold=THRESHOLD
+def do_note_search(
+    note_id: str, max_results: float, uid: str, threshold=THRESHOLD
 ) -> list[NoteSummaryRecord]:
     """Search for text in the notes
     noteId -- ID of the note to compare
@@ -159,11 +166,11 @@ def doNoteSearch(
     """
 
     # get the note
-    notes = getMyNotes(uid)
+    notes = get_my_notes(uid)
     # find the note with note.id == noteId
-    note = get_note_by_id(notes, noteId)
+    note = get_note_by_id(notes, note_id)
     if not note:
-        print("noteSearch - note not found", {noteId, uid})
+        print("noteSearch - note not found", {note_id, uid})
         return []
 
     # only search if there are text fields
@@ -177,29 +184,12 @@ def doNoteSearch(
             return []
 
         # get embeddings for this note
-        note = updateNoteEmbeddings(note)
+        note = update_note_embeddings(note)
 
         # get the most similar notes
-        searchResults = notesSimilarRanked(note, notes, noteId, maxResults, threshold)
-        return searchResults
-    else:
-        # if the note has no text fields, return empty
-        return []
-
-
-EmbeddingsRecord: TypeAlias = dict[str, list[list[float]]]
-
-
-def getEmbeddingsForNotes(notes: list[Note], originalId: str) -> EmbeddingsRecord:
-    """Get the embeddings for a list of notes
-    notes --  the snapshot of the notes
-    originalId --  the id of the note to exclude from the results
-    Returns the embeddings for the notes
-    """
-    vecs: EmbeddingsRecord = {}
-    for n in notes:
-        if n.id != originalId:
-            updated = updateNoteEmbeddings(n)
-            vecs[n.id] = [updated.title_embedding, updated.content_embedding]
-
-    return vecs
+        search_results = notes_similar_ranked(
+            note, notes, note_id, max_results, threshold
+        )
+        return search_results
+    # as the note has no text fields, return empty
+    return []
