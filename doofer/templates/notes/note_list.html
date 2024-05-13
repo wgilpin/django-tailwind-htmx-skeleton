@@ -1,14 +1,16 @@
-{% extends "base.html" %} {% load static %} {% block content %}
-<div id="notes-list">
+{% extends "base.html" %} 
+{% load static %} 
+{% block content %}
+<div id="notes-list" class="max-w-screen-xl mx-auto">
   {% if notes %}
-  <div class="p-5 sm:p-8">
+  <div class="p-4 sm:p-8">
     <div class="columns-1 gap-5 sm:columns-2 sm:gap-8 md:columns-3 lg:columns-4 [&>img:not(:first-child)]:mt-8">
       {% for note in notes %}
       <div
         _="on click toggle .hidden on #note-modal"
         hx-get="/note/{{note.id}}/"
         hx-target="#note-details"
-        class="min-w-20 my-4">
+        class="min-w-20 pt-4 break-inside-avoid-column">
         <div class="bg-yellow-200 rounded-lg shadow-md">
           {% if note.get_yt_thumbnail_url %}
           <img class="w-full h-40 object-cover rounded-t-lg" src="{{ note.get_yt_thumbnail_url }}" alt="thumbnail" />
