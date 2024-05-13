@@ -15,9 +15,9 @@
           {% if note.get_yt_thumbnail_url %}
           <img class="w-full h-40 object-cover rounded-t-lg" src="{{ note.get_yt_thumbnail_url }}" alt="thumbnail" />
           {% endif %}
-          <div class="p-4">
+          <div class="p-4 overflow-hidden">
             <h5 class="text-lg font-bold">{{ note.title }}</h5>
-            <p class="mt-2">{{ note.content }}</p>
+            <p class="mt-2 ">{{ note.preview | safe }}</p>
           </div>
         </div>
       </div>

@@ -59,6 +59,20 @@ class Note(models.Model):
         """convert comment to html"""
         return markdown(self.comment)
 
+    def preview(self):
+        """convert first 3 lines of comment to html"""
+        lines = self.comment.split("\n")
+        line_count = len(lines)
+        lines = lines[0:4]
+        if lines[0] == "From page:  ":
+            lines = lines[1:]
+        else:
+            lines = lines[:3]
+        if line_count > 4:
+            lines[-1] = lines[-1] + "..."
+
+        return markdown("\n".join(lines))
+
     def get_yt_thumbnail_url(self):
         """get the video id from a the url if it's a youtube url"""
         if "youtube.com" in self.url:
