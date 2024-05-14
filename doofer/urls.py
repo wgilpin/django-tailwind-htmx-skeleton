@@ -33,6 +33,7 @@ urlpatterns = [
     path("note/<int:id_>/", core_views.note_details, name="note_details"),
     path("search/", core_views.search, name="search"),
     path("admin/", admin.site.urls),
+    path("api/", include("doofer.api.urls")),
     path("__reload__/", include("django_browser_reload.urls")),
 ]
 
