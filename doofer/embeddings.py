@@ -2,28 +2,10 @@
 
 import math
 
-from doofer.hf_model import HFModel
+from doofer.hf_model import get_hf_embeddings
 from doofer.models import Note
 
 EMBEDDINGS_SIZE = 384
-
-"""
- * get the embedding from hugging face
- * @param {str} text the text to embed
- * @return {Promise<number[]>} the embedding
-"""
-
-
-def get_hf_embeddings(text: str) -> list[float]:
-    """Get the embeddings for a given text using the Hugging Face model"""
-
-    try:
-        model = HFModel().load_model()
-        embeddings = model.encode(text)
-        return list(embeddings)
-    except Exception as error:
-        print("hf error", error)
-        return []
 
 
 def get_text_embedding(text: str) -> list[float]:
