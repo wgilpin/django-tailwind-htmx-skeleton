@@ -9,7 +9,6 @@ from doofer.search import (
     vecs_similar_ranked,
     do_text_search,
     do_note_search,
-    get_embeddings_for_notes,
 )
 from fixtures import user_1, note_1, note_2, note_3
 
@@ -77,15 +76,3 @@ def test_doNoteSearch(note_1):
     threshold = 0.25
     expected = do_note_search(noteId, maxResults, uid, threshold)
     assert do_note_search(noteId, maxResults, uid, threshold) == expected
-
-
-@pytest.mark.django_db
-def test_getEmbeddingsForNotes(note_1, note_2, note_3):
-    notes = [
-        Note.objects.get(id="1"),
-        Note.objects.get(id="2"),
-        Note.objects.get(id="3"),
-    ]
-    originalId = ""
-    expected = get_embeddings_for_notes(notes, originalId)
-    assert get_embeddings_for_notes(notes, originalId) == expected
