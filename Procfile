@@ -1,1 +1,1 @@
-web: gunicorn doofer.wsgi:app
+web: gunicorn doofer.wsgi:application
