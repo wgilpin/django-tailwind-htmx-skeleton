@@ -24,7 +24,8 @@
   "portsAttributes": {
     "8000": {
       "label": "Application",
-      "onAutoForward": "openPreview"
+      // https://containers.dev/implementors/json_reference/#port-attributes
+      "onAutoForward": "openBrowserOnce"
     }
   },
   "forwardPorts": [8000]
