@@ -44,12 +44,8 @@ if IS_HEROKU_APP:
 else:
     ALLOWED_HOSTS = ["127.0.0.1,localhost"]
 
-if IS_HEROKU_APP:
-    codespace_name = config("CODESPACE_NAME")
-    codespace_domain = config("GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN")
-    CSRF_TRUSTED_ORIGINS = [f"https://{codespace_name}-8000.{codespace_domain}"]
 
-# Application definition
+# Application definition.
 
 INSTALLED_APPS = [
     "django.contrib.admin",
