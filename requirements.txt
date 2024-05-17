@@ -10,6 +10,7 @@ dill==0.3.8
 dj-database-url==2.1.0
 Django==5.0.4
 django-browser-reload==1.12.1
+django-heroku==0.3.1
 django-stubs==5.0.0
 django-stubs-ext==5.0.0
 django-widget-tweaks==1.5.0
@@ -38,6 +39,7 @@ nvidia-cufft-cu12==11.0.2.54
 packaging==24.0
 platformdirs==4.2.1
 pluggy==1.5.0
+psycopg2==2.9.9
 psycopg2-binary==2.9.9
 pylint==3.2.0
 pylint-django==2.5.5
@@ -62,3 +64,4 @@ types-PyYAML==6.0.12.20240311
 types-requests==2.31.0.20240406
 typing_extensions==4.10.0
 urllib3==2.2.1
+whitenoise==6.6.0

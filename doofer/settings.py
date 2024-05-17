@@ -13,9 +13,8 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 import os
 from pathlib import Path
 from decouple import config  # type: ignore [import-untyped]
+import django_heroku  # type: ignore [import-untyped]
 
-# for postgresql
-import dj_database_url
 
 # The `DYNO` env var is set on Heroku CI, but it's not a real Heroku app, so we have to
 # also explicitly exclude CI:
@@ -39,10 +38,7 @@ DEBUG = config("DEBUG", default=True)
 # validation of the Host header in the incoming HTTP request. On other platforms you may need
 # to list the expected hostnames explicitly to prevent HTTP Host header attacks. See:
 # https://docs.djangoproject.com/en/5.0/ref/settings/#std-setting-ALLOWED_HOSTS
-if IS_HEROKU_APP:
-    ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "*").split(",")
-else:
-    ALLOWED_HOSTS = ["127.0.0.1,localhost"]
+ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "*").split(",")
 
 
 # Application definition.
@@ -157,9 +153,4 @@ MEDIA_ROOT = BASE_DIR / "doofer" / "media"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-if "CODESPACE_NAME" not in os.environ:
-
-    # for postgresql
-    DATABASES["default"] = dict(
-        dj_database_url.config(conn_max_age=600, ssl_require=True)
-    )
+django_heroku.settings(locals())
