@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     "doofer",
     "widget_tweaks",
     "rest_framework",
+    "rest_framework.authtoken",
 ]
 
 MIDDLEWARE = [
