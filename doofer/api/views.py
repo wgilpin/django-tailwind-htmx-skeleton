@@ -5,6 +5,7 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.authtoken.models import Token
 
 from rest_framework.decorators import api_view
 from django.contrib.auth import authenticate, login, logout
@@ -69,7 +70,8 @@ def auth_login(request):
         print("User logged in to API")
 
         # Return success response
-        return Response({"message": "Login successful"}, status=200)
+        token, _ = Token.objects.get_or_create(user=user)
+        return Response({"message": "Login successful", "key": token.key}, status=200)
     else:
         # Return error response
         return Response({"message": "Invalid credentials!"}, status=401)
