@@ -5,6 +5,8 @@ import os
 from dotenv import load_dotenv
 import requests
 import time
+from decouple import config  # type: ignore [import-untyped]
+
 
 HF_MODEL = "all-MiniLM-L6-v2"
 
@@ -23,8 +25,11 @@ class HFKey:
     def load_model(self):
         """load the env var"""
         if self._token is None:
-            load_dotenv("secrets.env")
-            self._token = os.getenv("API_TOKEN")
+            if config("IS_HEROKU", default="No") == "Yes":
+                self.token = config("API_TOKEN", default="")
+            else:
+                load_dotenv("secrets.env")
+                self._token = os.getenv("API_TOKEN")
             if self._token is None:
                 raise ValueError("API_TOKEN environment variable not set")
         return self._token
