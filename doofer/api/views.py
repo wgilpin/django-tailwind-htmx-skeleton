@@ -57,26 +57,6 @@ def note_create(request):
     return Response(serialiser.errors, status=400)
 
 
-@api_view(["POST"])
-@permission_classes([AllowAny])
-def auth_login(request):
-    """login the user given username and password"""
-    username = request.data.get("username")
-    password = request.data.get("password")
-
-    user = authenticate(request, username=username, password=password)
-    if user is not None:
-        login(request, user)
-        print("User logged in to API")
-
-        # Return success response
-        token, _ = Token.objects.get_or_create(user=user)
-        return Response({"message": "Login successful", "key": token.key}, status=200)
-    else:
-        # Return error response
-        return Response({"message": "Invalid credentials!"}, status=401)
-
-
 @api_view(["GET"])
 @permission_classes([AllowAny])
 def get_all(request):

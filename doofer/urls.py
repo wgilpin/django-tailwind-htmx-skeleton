@@ -35,7 +35,8 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include("doofer.api.urls")),
     path("__reload__/", include("django_browser_reload.urls")),
-    path("dj-rest-auth/", include("dj_rest_auth.urls")),
+    # auth urls for dj-rest-auth, including login, logout, password reset, etc.
+    path("auth/", include("dj_rest_auth.urls")),
 ]
 
 if settings.DEBUG:
