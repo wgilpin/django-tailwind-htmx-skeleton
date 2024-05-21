@@ -25,6 +25,8 @@ class HFKey:
         if self._token is None:
             load_dotenv("secrets.env")
             self._token = os.getenv("API_TOKEN")
+            if self._token is None:
+                raise ValueError("API_TOKEN environment variable not set")
         return self._token
 
 
