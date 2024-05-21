@@ -26,7 +26,7 @@ class HFKey:
         """load the env var"""
         if self._token is None:
             if config("IS_HEROKU", default="No") == "Yes":
-                self.token = config("API_TOKEN", default="")
+                self.token = config("API_TOKEN", default=None)
             else:
                 load_dotenv("secrets.env")
                 self._token = os.getenv("API_TOKEN")
