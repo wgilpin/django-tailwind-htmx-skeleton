@@ -14,7 +14,7 @@ def get_text_embedding(text: str) -> list[float]:
         vector: list[float] = get_hf_embeddings(text)
         return vector
     except Exception as error:
-        print("API  error", {error})
+        print("HF API  error", {error})
         return []
 
 
