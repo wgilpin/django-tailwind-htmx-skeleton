@@ -67,6 +67,8 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django_browser_reload.middleware.BrowserReloadMiddleware",
 ]
+if not DEBUG:  # DEBUG should be False in production
+    MIDDLEWARE.remove("django_browser_reload.middleware.BrowserReloadMiddleware")
 
 X_FRAME_OPTIONS = "ALLOW-FROM preview.app.github.dev"
 
